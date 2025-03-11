@@ -54,7 +54,6 @@ export const findAll = async (filter: TaskFilter) => {
 		filters.push(inArray(tasks.id, sq.map(sq => sq.id)))
 	}
 	
-
 	const sortBy = filter.sort_by ? tasks[filter.sort_by] : tasks.due_date
 	const result = await query
 		.where(and(...filters))
@@ -65,49 +64,9 @@ export const findAll = async (filter: TaskFilter) => {
 			filter.sort_direction === SORT_DIRECTION.ASC
 				? desc(sortBy)
 				: asc(sortBy))
-		// .toSQL()
+
 	return result
-	// const results = await db.query.tasks.findMany({
-	// 	with: {
-	// 		assignees: {
-	// 			columns: {},
-	// 			with: {
-	// 				users: {
-	// 					columns: {
-	// 						id: true,
-	// 						username: true,
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// 	where: (task, { ilike, eq, between, and }) => {
-	// 		const filters: SQL[] = [];
-
-	// 		if (filter.title)
-	// 			filters.push(ilike(task.title, `%${filter.title}%`));
-	// 		if (filter.priority)
-	// 			filters.push(eq(task.priority, filter.priority));
-	// 		if (filter.due_date) {
-	// 			const startDate = filter.due_date[0];
-	// 			const endDate = filter.due_date[1];
-	// 			filters.push(between(task.due_date, startDate, endDate));
-	// 		}
-
-	// 		return and(...filters);
-	// 	},
-	// 	orderBy(task, { asc, desc }) {
-	// 		if (filter.sort_by) {
-	// 			return filter.sort_direction === SORT_DIRECTION.ASC
-	// 				? asc(task[filter.sort_by])
-	// 				: desc(task[filter.sort_by]);
-	// 		}
-	// 		return desc(task.due_date);
-	// 	},
-	// });
-
-
-	// return results;
+	
 };
 
 export const findOne = async (id: string) => {
