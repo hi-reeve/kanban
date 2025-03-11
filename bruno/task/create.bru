@@ -1,0 +1,25 @@
+meta {
+  name: create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/tasks
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title" : "task 5",
+    "description" : "Description",
+    "priority" : 1,
+    "status": "to_do",
+    "due_date": 1742470071,
+    "users" : [
+      "sgmatslt4kmlnf5bzglcnleb",
+      "fyo2t74vompuk874oh7phd7p"
+    ]
+  }
+}
