@@ -1,8 +1,8 @@
 "use client"
-import type { RegisterPayload } from '@app/utils/schema'
-import {ERROR_MESSAGE} from '@app/utils/string'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type { RegisterPayload } from '@app/utils/schema'
+import { ERROR_MESSAGE } from '@app/utils/string'
 
 import { cn } from '@/lib/utils'
 import { useMutationRegister } from '@/services/auth/mutation/useMutationRegister'
@@ -11,12 +11,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { GalleryVerticalEnd } from 'lucide-react'
 import Link from 'next/link'
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 const registerFeSchema = registerSchema.extend({
 	confirm_password : z.string()
@@ -40,7 +40,7 @@ export function RegisterForm({
 	const { mutate } = useMutationRegister({
 		onSuccess: () => {
 			toast.success('Register successfully')
-			router.push('/')
+			redirect('/dashboard')
 		},
 		onError(error) {
 			if (error.response?.data.message === ERROR_MESSAGE.USER.EXISTS) {

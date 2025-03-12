@@ -1,5 +1,6 @@
 import { ROLE_ENUM } from '../types'
 import { z } from 'zod'
+import { userResponseSchema } from './user'
 
 export const loginSchema = z.object({
     username: z.string(),
@@ -17,7 +18,8 @@ export const registerSchema = z.object({
 export type RegisterPayload = z.infer<typeof registerSchema>
 
 export const loginResponseSchema = z.object({
-    token: z.string(),
+	token: z.string(),
+	user : userResponseSchema
 })
 
 export type LoginResponse = z.infer<typeof loginResponseSchema>

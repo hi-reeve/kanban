@@ -5,18 +5,20 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useMutationLogin } from '@/services/auth/mutation/useMutationLogin'
-import { loginSchema } from '../../../packages/utils/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { GalleryVerticalEnd } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { loginSchema } from '../../../packages/utils/schema'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
-
 export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<'div'>) {
+	const router = useRouter()
     const form = useForm<LoginPayload>({
         resolver: zodResolver(loginSchema),
     })
@@ -30,8 +32,17 @@ export function LoginForm({
         },
     })
 
-    const onSubmit = (data: LoginPayload) => {
-        mutate(data)
+    const onSubmit =async  (data: LoginPayload) => {
+		
+		const res = await signIn('credentials', {
+			...data,
+			redirect : false
+		})
+
+		if (res?.ok) {
+			toast.success('Login successful')
+			router.push('/dashboard')
+		}
     }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
