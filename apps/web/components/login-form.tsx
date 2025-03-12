@@ -4,7 +4,6 @@ import type { LoginPayload } from '../../../packages/utils/schema'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { useMutationLogin } from '@/services/auth/mutation/useMutationLogin'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { GalleryVerticalEnd } from 'lucide-react'
 import { signIn } from 'next-auth/react'
@@ -14,35 +13,26 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { loginSchema } from '../../../packages/utils/schema'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
+
 export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<'div'>) {
-	const router = useRouter()
+    const router = useRouter()
     const form = useForm<LoginPayload>({
         resolver: zodResolver(loginSchema),
     })
 
-    const { mutate } = useMutationLogin({
-        onSuccess: () => {
+    const onSubmit = async (data: LoginPayload) => {
+        const res = await signIn('credentials', {
+            ...data,
+            redirect: false,
+        })
 
-        },
-        onError(error) {
-            toast.error(error.response?.data.message)
-        },
-    })
-
-    const onSubmit =async  (data: LoginPayload) => {
-		
-		const res = await signIn('credentials', {
-			...data,
-			redirect : false
-		})
-
-		if (res?.ok) {
-			toast.success('Login successful')
-			router.push('/dashboard')
-		}
+        if (res?.ok) {
+            toast.success('Login successful')
+            router.push('/dashboard')
+        }
     }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -78,8 +68,8 @@ export function LoginForm({
                                         <Input
                                             type="text"
                                             placeholder="john_doe"
-											{...field}
-											value={field.value ?? ""}
+                                            {...field}
+                                            value={field.value ?? ''}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -96,8 +86,8 @@ export function LoginForm({
                                         <Input
                                             type="password"
                                             placeholder="********"
-											{...field}
-											value={field.value ?? ""}
+                                            {...field}
+                                            value={field.value ?? ''}
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -5,6 +5,10 @@ export default antfu({
     stylistic: {
         indent: 4,
         quotes: 'single',
+        jsx: true,
+        overrides: {
+            'style/no-tabs': 'off',
+        },
     },
     extends: [
         'next/core-web-vitals',
@@ -12,5 +16,8 @@ export default antfu({
     ],
     rules: {
         'node/prefer-global/process': 'off',
+        'sort-imports': {
+            type: 'alphabetical',
+        },
     },
 })
