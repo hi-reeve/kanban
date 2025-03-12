@@ -1,0 +1,12 @@
+{
+	"name": "@app/utils",
+	"version": "1.0.0",
+	"devDependencies": {
+		"typescript": "^5.8.2"
+	},
+	"exports":{
+		"./schema" : "./schema/index.ts",
+		"./types" : "./types/index.ts",
+		"./string" : "./string/index.ts"
+	}
+}

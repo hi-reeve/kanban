@@ -1,6 +1,7 @@
-import express from "express"
+import express from 'express'
+
+import * as userController from './controller'
+
 export const router = express.Router()
 
-import * as userController from "./controller"
-
-router.get("/", userController.getUsers)
+router.get('/', userController.getUsers)

@@ -1,28 +1,29 @@
 {
-  "name": "swiftx-test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "pnpm run -r --parallel --aggregate-output dev"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.5.2",
-  "dependencies": {
-    "date-fns": "^4.1.0",
-    "drizzle-orm": "^0.40.0",
-    "http-status-codes": "^2.3.0",
-    "pg": "^8.13.3",
-    "prettier": "^3.5.3",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.5",
-    "eslint": "^9.22.0",
-    "eslint-plugin-format": "^1.0.1",
-    "tsx": "^4.19.3"
-  }
+    "name": "swiftx-test",
+    "version": "1.0.0",
+    "packageManager": "pnpm@10.5.2",
+    "description": "",
+    "author": "",
+    "license": "ISC",
+    "keywords": [],
+    "main": "index.js",
+    "scripts": {
+        "dev": "pnpm run -r --parallel --aggregate-output dev"
+    },
+    "dependencies": {
+        "date-fns": "^4.1.0",
+        "drizzle-orm": "^0.40.0",
+        "http-status-codes": "^2.3.0",
+        "pg": "^8.13.3",
+        "zod": "^3.24.2"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^4.8.1",
+        "@types/pg": "^8.11.11",
+        "drizzle-kit": "^0.30.5",
+        "eslint": "^9.22.0",
+        "eslint-plugin-format": "^1.0.1",
+        "tsx": "^4.19.3"
+
+    }
 }

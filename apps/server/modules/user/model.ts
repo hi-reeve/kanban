@@ -1,6 +1,6 @@
-import { db } from "../../db"
-import { users } from "../../db/schema/user"
+import { db } from '../../db'
+import { users } from '../../db/schema/user'
 
-export const findAll = async () => {
-	return await db.select().from(users)
+export async function findAll() {
+    return await db.select().from(users)
 }
