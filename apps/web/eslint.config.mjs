@@ -5,7 +5,6 @@ export default antfu({
     stylistic: {
         indent: 4,
         quotes: 'single',
-        jsx: true,
         overrides: {
             'style/no-tabs': 'off',
         },

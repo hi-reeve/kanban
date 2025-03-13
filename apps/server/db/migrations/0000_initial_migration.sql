@@ -12,6 +12,7 @@ CREATE TABLE "tasks" (
 CREATE TABLE "users" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"username" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
 	"role" "role" DEFAULT 'user' NOT NULL,
 	CONSTRAINT "users_username_unique" UNIQUE("username")

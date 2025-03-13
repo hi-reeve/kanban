@@ -11,12 +11,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { GalleryVerticalEnd } from 'lucide-react'
 import Link from 'next/link'
 
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 
-import { redirect, useRouter } from 'next/navigation'
+
 
 const registerFeSchema = registerSchema.extend({
 	confirm_password : z.string()
@@ -40,7 +41,7 @@ export function RegisterForm({
 	const { mutate } = useMutationRegister({
 		onSuccess: () => {
 			toast.success('Register successfully')
-			redirect('/dashboard')
+			router.push('/')
 		},
 		onError(error) {
 			if (error.response?.data.message === ERROR_MESSAGE.USER.EXISTS) {
@@ -90,6 +91,24 @@ export function RegisterForm({
                                         <Input
                                             type="text"
                                             placeholder="john_doe"
+											{...field}
+											value={field.value ?? ""}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+						<FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="John Doe"
 											{...field}
 											value={field.value ?? ""}
                                         />

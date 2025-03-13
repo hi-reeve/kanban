@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1741679462651,
+      "when": 1741825213142,
       "tag": "0000_initial_migration",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741833626320,
+      "tag": "0001_change_table_description_type",
       "breakpoints": true
     }
   ]

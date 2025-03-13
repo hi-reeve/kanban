@@ -1,5 +1,5 @@
+import type { TaskFilter } from '@app/utils/schema'
 import type { Request, Response } from 'express'
-import type { TaskFilter } from './schema'
 import * as taskModel from './model'
 
 export async function getAllTasks(req: Request<{}, {}, {}, TaskFilter>, res: Response) {

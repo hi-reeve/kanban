@@ -1,5 +1,5 @@
-import { SORT_DIRECTION } from '../../../../packages/utils/types'
 import { z } from 'zod'
+import { SORT_DIRECTION } from '../types'
 
 export const createTaskSchema = z.object({
     title: z.string(),

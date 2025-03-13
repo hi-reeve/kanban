@@ -5,6 +5,7 @@ type UserData = {
 	id: string;
 	token: string;
 	name: string;
+	username: string;
 	role: string;
 }
 declare module "next-auth" {

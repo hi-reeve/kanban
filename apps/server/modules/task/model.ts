@@ -1,7 +1,7 @@
+import type { CreateTaskDto, TaskFilter, UpdateTaskDto } from '@app/utils/schema'
 import type { SQL } from 'drizzle-orm'
-import type { CreateTaskDto, TaskFilter, UpdateTaskDto } from './schema'
-import { SORT_DIRECTION } from '../../../../packages/utils/types'
 import { and, asc, between, desc, eq, ilike, inArray, sql } from 'drizzle-orm'
+import { SORT_DIRECTION } from '../../../../packages/utils/types'
 import { db } from '../../db'
 import { tasks } from '../../db/schema/task'
 import { users } from '../../db/schema/user'
@@ -18,7 +18,7 @@ export async function findAll(filter: TaskFilter) {
             due_date: tasks.due_date,
             status: tasks.status,
             is_done: tasks.is_done,
-            assignees: sql`array_agg(json_build_object('id', users.id,'username', users.username))`,
+            assignees: sql`array_agg(json_build_object('id', users.id,'name', users.name))`,
         })
         .from(tasks)
         .leftJoin(userTasks, eq(tasks.id, userTasks.task_id))

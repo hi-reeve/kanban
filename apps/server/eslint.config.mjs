@@ -6,12 +6,15 @@ export default antfu({
     stylistic: {
         indent: 4,
         quotes: 'single',
-		
+
     },
     rules: {
         'ts/no-empty-object-type': 'off',
         'node/prefer-global/process': 'off',
         'no-console': 'off',
+        'sort-imports': {
+            type: 'alphabetical',
+        },
     },
 
 })

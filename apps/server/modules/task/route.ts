@@ -1,8 +1,8 @@
+import { createTaskSchema, idTaskSchema, taskFilterSchema, updateTaskSchema } from '@app/utils/schema'
 import express from 'express'
 import { authMiddleware } from '../../middleware/auth'
 import { validateData } from '../../middleware/validation'
 import * as taskController from './controller'
-import { createTaskSchema, idTaskSchema, taskFilterSchema, updateTaskSchema } from './schema'
 
 export const router = express.Router()
 router.use(authMiddleware)
