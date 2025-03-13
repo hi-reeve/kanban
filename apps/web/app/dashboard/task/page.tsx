@@ -122,10 +122,10 @@ export default function Page() {
 		const columnTarget = overData?.sortable?.containerId
 		const isChangeColumn = activeData?.status !== overData?.sortable?.containerId
 
-
 		if (!statusMap.includes(columnTarget)) return
 
-		if (isChangeColumn && columnTarget) {
+		const isChangeOrder = activeData.task.id !== overData?.task.id
+		if (isChangeColumn && columnTarget && !isChangeOrder) {
 			mutateUpdateTask({
 				id: activeData.task.id,
 				payload: {

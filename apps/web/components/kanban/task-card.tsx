@@ -28,7 +28,8 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 		listeners,
 		transform,
 		transition,
-		isDragging
+		isDragging,
+		
 	} = useSortable({
 		id: task.id,
 		data: {
@@ -80,11 +81,11 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 					<div className="flex items-center justify-between w-full">
 						<AvatarGroup>
 							{task.assignees.map(assignee => (
-								<TooltipProvider>
+								<TooltipProvider  key={assignee.id}>
 									<Tooltip>
 										<TooltipTrigger>
 
-											<Avatar key={assignee.id} className="h-8 w-8 rounded-full">
+											<Avatar className="h-8 w-8 rounded-full">
 												<AvatarImage alt={assignee.name} />
 												<AvatarFallback className="rounded-lg">{initialGenerator(assignee.name)}</AvatarFallback>
 											</Avatar>
