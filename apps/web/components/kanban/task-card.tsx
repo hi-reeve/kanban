@@ -1,3 +1,9 @@
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { initialGenerator, priorityMapper } from "@/lib/utils"
 import { ITaskListResponse } from "@/types/task"
 import { useSortable } from "@dnd-kit/sortable"
@@ -11,20 +17,22 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 type Props = {
 	task: ITaskListResponse
+	isOverlay?: boolean
 }
 
 
-const TaskCard = ({ task }: Props) => {
+const TaskCard = ({ task, isOverlay }: Props) => {
 	const priority = computed(() => priorityMapper(task.priority))
 	const {
 		setNodeRef,
 		listeners,
 		transform,
 		transition,
+		isDragging
 	} = useSortable({
 		id: task.id,
 		data: {
-			type : 'task',
+			type: 'task',
 			task
 		},
 	});
@@ -34,10 +42,10 @@ const TaskCard = ({ task }: Props) => {
 		transform: CSS.Translate.toString(transform),
 	};
 
-	const variants = cva("", {
+	const variants = cva('', {
 		variants: {
 			dragging: {
-				over: "ring opacity-30",
+				over: "ring opacity-30 z-10",
 				overlay: "ring ring-sidebar",
 			},
 		},
@@ -47,14 +55,14 @@ const TaskCard = ({ task }: Props) => {
 		<Card ref={setNodeRef}
 			style={style}
 			className={variants({
-				dragging: "overlay",
+				dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
 			})}>
 			<CardHeader>
 				<CardTitle className="flex items-center">
 					<Button
 						variant={"ghost"}
 						{...listeners}
-						className="h-auto cursor-grab hover:bg-transparent pl-0!"
+						className="h-auto cursor-grab hover:bg-transparent pl-0! md:block hidden"
 					>
 						<span className="sr-only">Move task</span>
 						<GripVertical />
@@ -72,10 +80,20 @@ const TaskCard = ({ task }: Props) => {
 					<div className="flex items-center justify-between w-full">
 						<AvatarGroup>
 							{task.assignees.map(assignee => (
-								<Avatar key={assignee.id} className="h-8 w-8 rounded-full">
-									<AvatarImage alt={assignee.name} />
-									<AvatarFallback className="rounded-lg">{initialGenerator(assignee.name)}</AvatarFallback>
-								</Avatar>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger>
+
+											<Avatar key={assignee.id} className="h-8 w-8 rounded-full">
+												<AvatarImage alt={assignee.name} />
+												<AvatarFallback className="rounded-lg">{initialGenerator(assignee.name)}</AvatarFallback>
+											</Avatar>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>{assignee.name}</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
 							))}
 						</AvatarGroup>
 						<Badge variant={priority.value.variant} >

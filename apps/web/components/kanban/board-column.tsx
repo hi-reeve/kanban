@@ -1,26 +1,25 @@
 import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
 } from "@/components/ui/card"
 import { ITaskListResponse } from "@/types/task"
 import { StatusEnum } from "@app/utils/types"
 import { rectSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from "@dnd-kit/utilities"
-import { cva } from "class-variance-authority"
 import { useMemo } from "react"
-import TaskCard from "./TaskCard"
+import TaskCard from "./task-card"
 type StatusOption = {
 	label: string
 	value: StatusEnum
 }
 type Props = {
-
+	isOverlay?: boolean;
 	status: StatusOption,
 	tasks: ITaskListResponse[]
 }
-export const BoardColumn = ({ status, tasks }: Props) => {
+export const BoardColumn = ({ status, tasks,isOverlay }: Props) => {
 	const tasksIds = useMemo(() => tasks.map(task => task.id), [tasks])
 	const {
 		setNodeRef,
@@ -36,24 +35,9 @@ export const BoardColumn = ({ status, tasks }: Props) => {
 	const style = {
 		transition,
 		transform: CSS.Translate.toString(transform),
-	};
-	const variants = cva(
-		"",
-		{
-			variants: {
-				dragging: {
-					default: "border border-transparent",
-					over: "ring opacity-30",
-					overlay: "ring ring-sidebar",
-				},
-			},
-		}
-	);
+	}
 	return (
-		<Card ref={setNodeRef} style={style}
-			className={variants({
-				dragging: "overlay"
-			})}>
+		<Card ref={setNodeRef} style={style}>
 			<CardHeader >
 				<CardTitle className="flex items-center">
 					<span>{status.label}</span>

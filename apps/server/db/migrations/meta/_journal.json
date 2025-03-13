@@ -15,6 +15,13 @@
       "when": 1741833626320,
       "tag": "0001_change_table_description_type",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741846174886,
+      "tag": "0002_add_column_order_to_task",
+      "breakpoints": true
     }
   ]
 }

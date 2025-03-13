@@ -9,3 +9,9 @@ export const userResponseSchema = z.object({
 })
 
 export type UserResponse = z.infer<typeof userResponseSchema>
+
+export const userFilterSchema = z.object({
+	q : z.string().optional(),
+})
+
+export type UserFilter = z.infer<typeof userFilterSchema>

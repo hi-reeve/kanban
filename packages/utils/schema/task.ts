@@ -4,7 +4,7 @@ import { SORT_DIRECTION } from '../types'
 export const createTaskSchema = z.object({
     title: z.string(),
     description: z.string(),
-    priority: z.number(),
+    priority: z.coerce.number(),
     due_date: z.number(),
     status: z.string(),
     users: z.array(z.string()),
