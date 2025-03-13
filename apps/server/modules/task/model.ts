@@ -94,5 +94,5 @@ export async function destroy(id: string) {
 }
 
 export async function update(id: string, task: UpdateTaskDto) {
-    return await db.update(tasks).set(task).where(eq(tasks.id, id))
+    return await db.update(tasks).set(task).where(eq(tasks.id, id)).returning()
 }

@@ -22,6 +22,22 @@ export const updateTaskSchema = z.object({
 })
 export type UpdateTaskDto = z.infer<typeof updateTaskSchema>
 
+export const TaskResponse = z.object({
+	id: z.string(),
+	title: z.string(),
+	description: z.string(),
+	priority: z.number(),
+	due_date: z.number(),
+	status: z.string(),
+	is_done: z.boolean(),
+	assignees: z.array(z.object({
+		id: z.string(),
+		name: z.string(),
+	})),
+})
+
+export type TaskResponse = z.infer<typeof TaskResponse>
+
 export const idTaskSchema = z.object({
     id: z.string(),
 })
