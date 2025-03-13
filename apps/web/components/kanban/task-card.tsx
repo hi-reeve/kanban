@@ -10,11 +10,12 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { computed } from "@preact/signals-react"
 import { cva } from "class-variance-authority"
-import { EllipsisVerticalIcon, GripVertical } from "lucide-react"
+import { GripVertical } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import CardMenu from "./card-menu"
 type Props = {
 	task: ITaskListResponse
 	isOverlay?: boolean
@@ -29,7 +30,7 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 		transform,
 		transition,
 		isDragging,
-		
+
 	} = useSortable({
 		id: task.id,
 		data: {
@@ -69,9 +70,7 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 						<GripVertical />
 					</Button>
 					<span>{task.title}</span>
-					<Button size='icon' variant='ghost' className="ml-auto cursor-pointer">
-						<EllipsisVerticalIcon />
-					</Button>
+				<CardMenu task={task}/>
 				</CardTitle>
 				<CardContent className="px-0 mt-4">
 					<p className="truncate">{task.description}</p>
@@ -81,7 +80,7 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 					<div className="flex items-center justify-between w-full">
 						<AvatarGroup>
 							{task.assignees.map(assignee => (
-								<TooltipProvider  key={assignee.id}>
+								<TooltipProvider key={assignee.id}>
 									<Tooltip>
 										<TooltipTrigger>
 

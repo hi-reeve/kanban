@@ -2,12 +2,14 @@
 import { cn, priorityOptions, statusArray } from "@/lib/utils"
 import { useMutationCreateTask } from "@/services/task/mutation/useMutationCreateTask"
 import { useQueryGetAllUser } from "@/services/user/query/useQueryGetAllUser"
+import { ITaskListResponse } from "@/types/task"
 import { CreateTaskDto, createTaskSchema } from "@app/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -21,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../ui/textarea"
 
 
-const ManageForm = () => {
+const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 	const queryClient = useQueryClient()
 	const router = useRouter()
 	const { data: userList } = useQueryGetAllUser()
@@ -48,6 +50,20 @@ const ManageForm = () => {
 			users: []
 		}
 	})
+
+	useEffect(() => {
+
+		if (task) {
+			
+			form.setValue('title', task.title)
+			form.setValue('description', task.description)
+			form.setValue('priority', task.priority)
+			form.setValue('status', task.status)
+			form.setValue('due_date', task.due_date)
+			// form.setValue('users', task.assignees.map(user => user.id))
+			
+		}
+	},[task])
 	const onSubmit = async (data: CreateTaskDto) => {
 		createTask(data)
 	}

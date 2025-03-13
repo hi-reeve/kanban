@@ -66,7 +66,26 @@ export async function findAll(filter: TaskFilter) {
 }
 
 export async function findOne(id: string) {
-    return await db.select().from(tasks).where(eq(tasks.id, id))
+	
+    const [task] =  await db.select({
+		id: tasks.id,
+		title: tasks.title,
+		description: tasks.description,
+		priority: tasks.priority,
+		due_date: tasks.due_date,
+		status: tasks.status,
+		is_done: tasks.is_done,
+		assignees: sql`array_agg(json_build_object('id', users.id,'name', users.name))`,
+	})
+	.from(tasks)
+	.leftJoin(userTasks, eq(tasks.id, userTasks.task_id))
+	.leftJoin(users, eq(users.id, userTasks.user_id))
+		.where(eq(tasks.id, id))
+	.groupBy(
+		tasks.id
+	)
+
+	return task
 }
 
 export async function store(task: CreateTaskDto) {
