@@ -15,10 +15,13 @@ import {
 } from "@/components/ui/sidebar"
 import { $api } from "@/lib/http-client"
 import { computed, effect } from '@preact/signals-react'
-import { useSession } from "next-auth/react"
+import { isAxiosError } from "axios"
+import { StatusCodes } from 'http-status-codes'
+import { signOut, useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import React from 'react'
 import { upperFirst } from 'scule'
+import { toast } from "sonner"
 const layout = ({ children }: { children: React.ReactNode }) => {
 	const {data : session} = useSession()
 	const pathname = usePathname()
@@ -43,8 +46,20 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 
 	effect(() => {
 		if (session?.user.token) {
+			$api.interceptors.response.use((value) => { 
+				
+				return value
+			},async  (error) => {
+				if (isAxiosError(error)) {
+					if (error.status === StatusCodes.FORBIDDEN) {
+						toast.error(error.response?.data.message)	
+						await signOut()
+					}
+				}
+			})
 			$api.interceptors.request.use(
 				(config) => {
+					
 					config.headers.Authorization = `Bearer ${session.user.token}`
 					return config
 			})

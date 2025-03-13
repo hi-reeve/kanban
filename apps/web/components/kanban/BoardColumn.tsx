@@ -8,8 +8,8 @@ import { ITaskListResponse } from "@/types/task"
 import { StatusEnum } from "@app/utils/types"
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from "@dnd-kit/utilities"
-import { computed } from "@preact/signals-react"
 import { cva } from "class-variance-authority"
+import React, { useMemo } from "react"
 import TaskCard from "./TaskCard"
 type StatusOption = {
 	label: string
@@ -21,7 +21,7 @@ type Props = {
 	tasks: ITaskListResponse[]
 }
 export const BoardColumn = ({ status, tasks }: Props) => {
-	const tasksIds = computed(() => tasks.map(task => task.id))
+	const tasksIds = useMemo(() => tasks.map(task => task.id),[tasks])
 	const {
 		setNodeRef,
 		transform,
@@ -29,11 +29,8 @@ export const BoardColumn = ({ status, tasks }: Props) => {
 	} = useSortable({
 		id: status.value,
 		data: {
-
-
-		},
-		attributes: {
-			roleDescription: `Status: ${status.label}`,
+			type: 'column',
+			id: status.value
 		},
 	});
 	const style = {
@@ -43,38 +40,37 @@ export const BoardColumn = ({ status, tasks }: Props) => {
 	const variants = cva(
 		"",
 		{
-		  variants: {
-			dragging: {
-			  default: "border border-transparent",
-			  over: "ring opacity-30",
-			  overlay: "ring ring-primary",
+			variants: {
+				dragging: {
+					default: "border border-transparent",
+					over: "ring opacity-30",
+					overlay: "ring ring-sidebar",
+				},
 			},
-		  },
 		}
-	  );
-	
+	);
 	return (
-		<Card ref={setNodeRef}  style={style}
-		className={variants({
-		  dragging: "overlay"
-		})}>
-			<CardHeader >
-				<CardTitle className="flex items-center">
-					<span>{status.label}</span>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<SortableContext items={tasksIds.value}>
+		<SortableContext items={tasksIds} id={status.value}>
+			<Card ref={setNodeRef} style={style}
+				className={variants({
+					dragging: "overlay"
+				})}>
+				<CardHeader >
+					<CardTitle className="flex items-center">
+						<span>{status.label}</span>
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
 					<div className="space-y-4">
-					{tasks.map(task => (
-						<>
-							{task.status === status.value && <TaskCard task={task} />}
-						</>
-					))}
+						{tasks.map(task => (
+							<React.Fragment key={task.id}>
+								{task.status === status.value && <TaskCard task={task} />}
+							</React.Fragment>
+						))}
 
 					</div>
-				</SortableContext>
-			</CardContent>
-		</Card>
+				</CardContent>
+			</Card>
+		</SortableContext>
 	)
 }

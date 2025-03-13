@@ -1,11 +1,12 @@
 import { $api } from "@/lib/http-client"
+import { AppQueryOptions } from "@/types/react-query"
 import { ITaskListResponse } from "@/types/task"
 import { TaskFilter } from "@app/utils/schema"
 import { ApiResponse } from "@app/utils/types"
 import { useSignal } from "@preact/signals-react"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
-export const useQueryGetAllTasks = (queryOptions? : UseQueryOptions<ApiResponse<ITaskListResponse[]>>) => {
+export const useQueryGetAllTasks = (queryOptions? : AppQueryOptions<ApiResponse<ITaskListResponse[]>>) => {
 	const params = useSignal<TaskFilter>({})
 
 	return {

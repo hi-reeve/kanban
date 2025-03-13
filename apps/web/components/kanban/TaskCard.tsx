@@ -18,17 +18,14 @@ const TaskCard = ({ task }: Props) => {
 	const priority = computed(() => priorityMapper(task.priority))
 	const {
 		setNodeRef,
-		attributes,
 		listeners,
 		transform,
 		transition,
 	} = useSortable({
 		id: task.id,
 		data: {
+			type : 'task',
 			task
-		},
-		attributes: {
-			roleDescription: `Task: ${task.title}`,
 		},
 	});
 
@@ -41,7 +38,7 @@ const TaskCard = ({ task }: Props) => {
 		variants: {
 			dragging: {
 				over: "ring opacity-30",
-				overlay: "ring ring-primary",
+				overlay: "ring ring-sidebar",
 			},
 		},
 	});
@@ -56,7 +53,6 @@ const TaskCard = ({ task }: Props) => {
 				<CardTitle className="flex items-center">
 					<Button
 						variant={"ghost"}
-						{...attributes}
 						{...listeners}
 						className="h-auto cursor-grab hover:bg-transparent pl-0!"
 					>
@@ -76,7 +72,7 @@ const TaskCard = ({ task }: Props) => {
 					<div className="flex items-center justify-between w-full">
 						<AvatarGroup>
 							{task.assignees.map(assignee => (
-								<Avatar className="h-8 w-8 rounded-full">
+								<Avatar key={assignee.id} className="h-8 w-8 rounded-full">
 									<AvatarImage alt={assignee.name} />
 									<AvatarFallback className="rounded-lg">{initialGenerator(assignee.name)}</AvatarFallback>
 								</Avatar>
