@@ -1,8 +1,8 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle
 } from "@/components/ui/card"
 import { ITaskListResponse } from "@/types/task"
 import { StatusEnum } from "@app/utils/types"
@@ -49,7 +49,6 @@ export const BoardColumn = ({ status, tasks,isOverlay }: Props) => {
 						{tasks.map(task => (
 							<TaskCard key={task.id} task={task} />
 						))}
-
 					</div>
 				</SortableContext>
 			</CardContent>

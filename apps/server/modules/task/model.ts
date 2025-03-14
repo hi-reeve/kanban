@@ -30,11 +30,8 @@ export async function findAll(filter: TaskFilter) {
 	if (filter.priority)
 		filters.push(eq(tasks.priority, filter.priority))
 
-	if (filter.due_date) {
-		const startDate = filter.due_date[0]
-		const endDate = filter.due_date[1]
-		filters.push(between(tasks.due_date, startDate, endDate))
-	}
+	if (filter.start_date && filter.end_date) 
+		filters.push(between(tasks.due_date, filter.start_date, filter.end_date))
 
 	if (filter.assignee) {
 		const assignees = Array.isArray(filter.assignee)

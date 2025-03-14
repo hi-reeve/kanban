@@ -7,11 +7,15 @@ import { queryUserKeys } from "./queryKey"
 
 export const useQueryGetAllUser = (queryOptions?: UseQueryOptions<ApiResponse<UserResponse[]>>) => {
 	const [params,setParams] = useState<UserFilter>({})
-	return useQuery({
-		...queryOptions,
-		queryKey: queryUserKeys.list(params),
-		queryFn: async () => {
-			return (await $api.get('/v1/users', { params })).data
-		},
-	})
+	return {
+		setParams,
+		params,
+		...useQuery({
+			...queryOptions,
+			queryKey: queryUserKeys.list(params),
+			queryFn: async () => {
+				return (await $api.get('/v1/users', { params })).data
+			},
+		})
+	}
 }

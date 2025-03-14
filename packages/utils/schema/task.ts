@@ -45,7 +45,8 @@ export const idTaskSchema = z.object({
 export const taskFilterSchema = z.object({
     title: z.string().optional(),
     priority: z.coerce.number().optional(),
-    due_date: z.tuple([z.coerce.number(), z.coerce.number()]).optional(),
+	start_date: z.coerce.number().optional(),
+	end_date: z.coerce.number().optional(),
     assignee: z.array(z.string()).or(z.string()).optional(),
     sort_by: z.string().optional(),
     sort_direction: z.nativeEnum(SORT_DIRECTION).optional(),

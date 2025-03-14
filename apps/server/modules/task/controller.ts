@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import * as taskModel from './model'
 
 export async function getAllTasks(req: Request<{}, {}, {}, TaskFilter>, res: Response) {
-    const filter = req.query
+	const filter = req.query
 
     const task = await taskModel.findAll(filter)
     res.json({

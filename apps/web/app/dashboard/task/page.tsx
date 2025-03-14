@@ -1,5 +1,6 @@
 "use client"
 import { BoardColumn } from "@/components/kanban/board-column"
+import BoardFilter from "@/components/kanban/board-filter"
 import TaskCard from "@/components/kanban/task-card"
 import { statusArray } from "@/lib/utils"
 import { useMutationUpdateTask } from "@/services/task/mutation/useMutationUpdateTask"
@@ -18,7 +19,7 @@ const statusMap = Object.values(STATUS_ENUM)
 
 export type StatusColumns = typeof statusArray[number]
 export default function Page() {
-	const { params, data } = useQueryGetAllTasks({
+	const { params,setParams, data } = useQueryGetAllTasks({
 		staleTime: 0
 	})
 	const queryClient = useQueryClient()
@@ -48,39 +49,42 @@ export default function Page() {
 		useSensor(TouchSensor),
 	);
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-3 w-full gap-8 h-full">
-			<DndContext
-				sensors={sensors}
-				collisionDetection={pointerWithin}
-				onDragEnd={onDragEnd}
-				onDragStart={onDragStart}
-				onDragOver={onDragOver}>
-				<SortableContext items={columnsId} strategy={verticalListSortingStrategy}>
-					{columns.map(status => (
-						<BoardColumn key={status.value} status={status} tasks={tasks.filter(task => task.status === status.value)} />
-					))}
-				</SortableContext>
+		<>
+			<BoardFilter params={params} setParams={setParams} />
+			<div className="grid grid-cols-1 md:grid-cols-3 w-full gap-8 h-full">
+				<DndContext
+					sensors={sensors}
+					collisionDetection={pointerWithin}
+					onDragEnd={onDragEnd}
+					onDragStart={onDragStart}
+					onDragOver={onDragOver}>
+					<SortableContext items={columnsId} strategy={verticalListSortingStrategy}>
+						{columns.map(status => (
+							<BoardColumn key={status.value} status={status} tasks={tasks.filter(task => task.status === status.value)} />
+						))}
+					</SortableContext>
 
-				{/* overlay card */}
-				{typeof window !== 'undefined' && "document" in window &&
-					createPortal(
-						<DragOverlay>
-							{activeColumn && (
-								<BoardColumn
-									isOverlay
-									status={activeColumn}
-									tasks={tasks.filter(
-										(task) => task.status === activeColumn.value
-									)}
-								/>
-							)}
-							{activeTask && <TaskCard task={activeTask} isOverlay />}
-						</DragOverlay>,
-						document.body
-					)}
-			</DndContext>
-		</div>
-		
+					{/* overlay card */}
+					{typeof window !== 'undefined' && "document" in window &&
+						createPortal(
+							<DragOverlay>
+								{activeColumn && (
+									<BoardColumn
+										isOverlay
+										status={activeColumn}
+										tasks={tasks.filter(
+											(task) => task.status === activeColumn.value
+										)}
+									/>
+								)}
+								{activeTask && <TaskCard task={activeTask} isOverlay />}
+							</DragOverlay>,
+							document.body
+						)}
+				</DndContext>
+			</div>
+		</>
+
 	)
 	function onDragStart(event: DragStartEvent) {
 
