@@ -1,8 +1,10 @@
 "use client"
 import { cn, priorityOptions, statusArray } from "@/lib/utils"
 import { useMutationCreateTask } from "@/services/task/mutation/useMutationCreateTask"
+import { useMutationUpdateTask } from "@/services/task/mutation/useMutationUpdateTask"
 import { useQueryGetAllUser } from "@/services/user/query/useQueryGetAllUser"
 import { ITaskListResponse } from "@/types/task"
+import { epochSecondToMillisecond, millisecondToEpochSecond } from '@app/utils/date'
 import { CreateTaskDto, createTaskSchema } from "@app/utils/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
@@ -23,27 +25,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../ui/textarea"
 
 
-const ManageForm = ({task} : {task? : ITaskListResponse}) => {
+const payloadSchema = createTaskSchema.omit({due_date:true}).extend({
+due_date : z.date()
+})
+type PayloadDto = z.infer<typeof payloadSchema>
+const ManageForm = ({ task }: { task?: ITaskListResponse }) => {
 	const queryClient = useQueryClient()
 	const router = useRouter()
 	const { data: userList } = useQueryGetAllUser()
-	const { mutate: createTask,isPending : loadingCreate } = useMutationCreateTask({
+	const { mutate: createTask, isPending: loadingCreate } = useMutationCreateTask({
 		onSuccess: () => {
 			toast.success('Task created successfully')
 			queryClient.invalidateQueries()
 			router.back()
 		}
 	})
-	const form = useForm<CreateTaskDto>({
-		resolver: zodResolver(createTaskSchema.extend({
-			due_date: z.date(),
-		}).transform(data => {
-			return {
-				...data,
-				
-				due_date: data.due_date.getTime()
-			}
-		})),
+
+	const { mutate: updateTask, isPending: loadingUpdate } = useMutationUpdateTask({
+		onSuccess: () => {
+			toast.success('Task updated successfully')
+			queryClient.invalidateQueries()
+			router.back()
+		}
+	})
+	const form = useForm<PayloadDto>({
+		resolver: zodResolver(payloadSchema),
 		defaultValues: {
 			priority: priorityOptions[0].value,
 			status: statusArray[0].value,
@@ -54,18 +60,30 @@ const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 	useEffect(() => {
 
 		if (task) {
-			
+
 			form.setValue('title', task.title)
 			form.setValue('description', task.description)
 			form.setValue('priority', task.priority)
 			form.setValue('status', task.status)
-			form.setValue('due_date', task.due_date)
-			// form.setValue('users', task.assignees.map(user => user.id))
-			
+			form.setValue('due_date', new Date(epochSecondToMillisecond(task.due_date)))
+
+			form.setValue('users', task.assignees.map(user => user.id))
+
 		}
-	},[task])
-	const onSubmit = async (data: CreateTaskDto) => {
-		createTask(data)
+	}, [task])
+	const onSubmit = async (data: PayloadDto) => {
+		
+		const payload: CreateTaskDto = {
+			...data,
+			due_date: millisecondToEpochSecond(data.due_date.getTime())
+		}
+		if (task)
+			updateTask({
+				id: task.id,
+				payload
+			})
+		else
+			createTask(payload)
 	}
 	return (
 		<div>
@@ -98,10 +116,10 @@ const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 									<FormLabel>Description</FormLabel>
 									<FormControl>
 										<Textarea
-
 											placeholder="Task Description"
 											{...field}
 											value={field.value ?? ''}
+											className="max-h-52 overflow-auto resize-none"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -114,7 +132,7 @@ const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Status</FormLabel>
-									<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<Select onValueChange={field.onChange}  value={field.value}>
 										<FormControl>
 											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select Task Status" />
@@ -136,17 +154,19 @@ const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 							name="priority"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Priority</FormLabel>
-									<Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+									<FormLabel>Priority {field.value}</FormLabel>
+									<Select onValueChange={field.onChange}  value={field.value.toString()}>
 										<FormControl>
 											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select Task Priority" />
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											{priorityOptions.map(priority => <SelectItem key={priority.value} value={priority.value?.toString()} >
-												{priority.label}
-											</SelectItem>)}
+											{priorityOptions.map(priority =>
+												<SelectItem key={priority.value} value={priority.value.toString()} >
+													{priority.label}
+												</SelectItem>)
+											}
 										</SelectContent>
 									</Select>
 
@@ -267,8 +287,8 @@ const ManageForm = ({task} : {task? : ITaskListResponse}) => {
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" className="w-full" disabled={loadingCreate}>
-							Create Task
+						<Button type="submit" className="w-full" disabled={loadingCreate || loadingUpdate}>
+							{task ? "Update" : "Create"} Task
 						</Button>
 					</div>
 				</form>

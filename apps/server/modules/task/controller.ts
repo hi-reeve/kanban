@@ -30,7 +30,7 @@ export async function createTask(req: Request, res: Response) {
 export async function updateTask(req: Request, res: Response) {
     const id = req.params.id
     const task = req.body
-    const [updatedTask] = await taskModel.update(id, task)
+    const updatedTask = await taskModel.update(id, task)
     res.json({
         data: updatedTask,
     })
