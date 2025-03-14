@@ -3,7 +3,7 @@ import { useQueryGetAllUser } from '@/services/user/query/useQueryGetAllUser'
 import { TaskFilter } from '@app/utils/schema'
 import { useDebounce } from '@uidotdev/usehooks'
 import { endOfDay, format, startOfDay } from 'date-fns'
-import { CalendarIcon, Search } from 'lucide-react'
+import { CalendarIcon, CircleX, Search } from 'lucide-react'
 import React, { Dispatch, useEffect, useState } from 'react'
 
 import { millisecondToEpochSecond } from '@app/utils/date'
@@ -124,13 +124,15 @@ const BoardFilter = ({ params, setParams }: {
 						</SelectItem>)}
 				</SelectContent>
 			</Select>
+			<div className='relative'>
+
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
 						id="date"
 						variant={"outline"}
 						className={cn(
-							"w-[300px] justify-start text-left font-normal",
+							"w-[280px] justify-start text-left font-normal",
 							!date && "text-muted-foreground"
 						)}
 					>
@@ -159,7 +161,11 @@ const BoardFilter = ({ params, setParams }: {
 						numberOfMonths={2}
 					/>
 				</PopoverContent>
+					{date && <Button variant='ghost' size='icon' className='cursor-pointer absolute right-0 hover:bg-transparent top-1/2 -translate-y-1/2' onClick={() => handleSelectDate(undefined)}>
+						<CircleX className='size-4 opacity-50 ' />
+					</Button>}
 			</Popover>
+			</div>
 
 		</div>
 	)
