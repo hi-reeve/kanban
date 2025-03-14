@@ -1,6 +1,7 @@
 // In Next.js, this file would be called: app/providers.tsx
 'use client'
 
+import { AlertConfirmation } from '@/components/AlertConfirmation'
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import {
 	isServer,
@@ -9,6 +10,7 @@ import {
 } from '@tanstack/react-query'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
+import { createPortal } from 'react-dom'
 
 
 function makeQueryClient() {
@@ -51,6 +53,8 @@ export default function Providers({ session,children }: { session : Session | nu
 
 	return (
 		<QueryClientProvider client={queryClient}>
+				
+			{typeof window !== 'undefined' && 'document' in window && createPortal(<AlertConfirmation/>, document.body)}
 			<SessionProvider session={session}>
 				{children}
 			</SessionProvider>

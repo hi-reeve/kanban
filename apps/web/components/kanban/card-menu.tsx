@@ -13,7 +13,9 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { priorityOptions, statusArray } from "@/lib/utils"
+import { useMutationDeleteTask } from "@/services/task/mutation/useMutationDeleteTask"
 import { useMutationUpdateTask } from "@/services/task/mutation/useMutationUpdateTask"
+import { useDialogStore } from "@/stores/dialog"
 import { ITaskListResponse } from "@/types/task"
 import { useQueryClient } from "@tanstack/react-query"
 import { Check, EllipsisVerticalIcon } from "lucide-react"
@@ -27,7 +29,9 @@ type Props = {
 const CardMenu = ({ task }: Props) => {
 	const router = useRouter()
 	const queryClient = useQueryClient()
-	const {  mutateAsync: mutateUpdateTaskAsync } = useMutationUpdateTask()
+	const state = useDialogStore(state => state)
+	const { mutateAsync: mutateUpdateTaskAsync } = useMutationUpdateTask()
+	const {mutateAsync : mutateDeleteTaskAsync} = useMutationDeleteTask()
 	const handleUpdateOnClick = async (key: keyof ITaskListResponse, value: any) => {
 
 		let loadingText = 'Updating task'
@@ -71,6 +75,25 @@ const CardMenu = ({ task }: Props) => {
 	const handleEditTask = () => {
 		router.push(`/dashboard/task/edit/${task.id}`)
 	}
+
+	const handleDeleteTask = () => {
+		state.open({
+			message: <span>
+				Are you sure you want to delete task <span className="font-bold">{task.title}</span>?
+			</span>,
+			onConfirmation: () => {
+				toast.promise(mutateDeleteTaskAsync(task.id), {
+					loading: 'Deleting task',
+					success: () => {
+						queryClient.invalidateQueries()
+						state.close()
+						return 'Task deleted successfully'
+					},
+					
+				})
+			}
+		})
+	}
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -87,7 +110,7 @@ const CardMenu = ({ task }: Props) => {
 					<DropdownMenuItem onClick={handleEditTask}>
 						Edit Tasks
 					</DropdownMenuItem>
-					<DropdownMenuItem>
+					<DropdownMenuItem onClick={handleDeleteTask}>
 						<span className="text-red-500">
 							Delete Task
 						</span>

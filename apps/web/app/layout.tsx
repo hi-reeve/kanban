@@ -1,3 +1,4 @@
+
 import { Toaster } from '@/components/ui/sonner'
 import type { Metadata } from 'next'
 import { getServerSession } from 'next-auth'
@@ -32,7 +33,7 @@ export default async function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <Toaster position="top-center" />
+				<Toaster position="top-center" />
                 <Providers session={session}>
                     {children}
                 </Providers>
