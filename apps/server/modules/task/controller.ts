@@ -1,5 +1,6 @@
 import type { TaskFilter } from '@app/utils/schema'
 import type { Request, Response } from 'express'
+import { StatusCodes } from 'http-status-codes'
 import * as taskModel from './model'
 
 export async function getAllTasks(req: Request<{}, {}, {}, TaskFilter>, res: Response) {
@@ -22,7 +23,7 @@ export async function getTask(req: Request, res: Response) {
 export async function createTask(req: Request, res: Response) {
     const task = req.body
     const newTask = await taskModel.store(task)
-    res.json({
+    res.status(StatusCodes.CREATED).json({
         data: newTask,
     })
 }
