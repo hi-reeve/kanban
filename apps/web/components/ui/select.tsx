@@ -1,7 +1,7 @@
 "use client"
 
 import * as SelectPrimitive from "@radix-ui/react-select"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { CheckIcon, ChevronDown, ChevronDownIcon, ChevronUpIcon, CircleXIcon } from "lucide-react"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -25,23 +25,29 @@ function SelectValue({
 }
 
 const SelectTrigger = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-	<SelectPrimitive.Trigger
-		ref={ref}
-		className={cn(
-			"flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-			className
-		)}
-		{...props}
-	>
-		{children}
-		<SelectPrimitive.Icon asChild>
-			<ChevronDownIcon className="size-4 opacity-50"/>
-		</SelectPrimitive.Icon>
-	</SelectPrimitive.Trigger>
-))
+    React.ElementRef<typeof SelectPrimitive.Trigger>,
+    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { onReset?: () => void }
+>(({className, children, onReset, ...props}, ref) => {
+    return (
+        <div
+            className={cn(
+                "relative z-0 flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+                className
+            )}
+        >
+            <SelectPrimitive.Trigger
+                ref={ref}
+                className={cn("w-full text-left pl-3 pr-10 py-2 truncate")}
+                {...props}
+            >
+                <span className={cn(`w-full pr-2 truncate`, !props.value && "text-neutral-400")}>{children}</span>
+            </SelectPrimitive.Trigger>
+            <SelectPrimitive.Icon className={cn(`absolute right-2 cursor-pointer`, !props.value && "pointer-events-none")}>
+                {props.value ? <CircleXIcon className="h-4 w-4 opacity-50" onClick={onReset}/> : <ChevronDown className="h-4 w-4 opacity-50 "/>}
+            </SelectPrimitive.Icon>
+        </div>
+    )
+})
 
 function SelectContent({
 	className,

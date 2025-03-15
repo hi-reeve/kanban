@@ -111,11 +111,15 @@ const BoardFilter = ({ params, setParams }: {
 					</TooltipProvider>
 				))}
 			</AvatarGroup>
-			<Select onValueChange={handlePriorityFilter} value={priority}>
-				<SelectTrigger className="w-full min-w-48" onReset={handleClearPriorityFilter}>
+			<div className='relative'>
 
-					<SelectValue placeholder="Select Priority" />
-				</SelectTrigger>
+			<Select onValueChange={handlePriorityFilter} value={priority}>
+					<SelectTrigger className="w-full min-w-48" onReset={handleClearPriorityFilter}
+						value={priority}
+					>
+						<SelectValue placeholder="Select Priority" />
+					</SelectTrigger>
+					
 
 				<SelectContent>
 					{priorityOptions.map(priority =>
@@ -124,6 +128,7 @@ const BoardFilter = ({ params, setParams }: {
 						</SelectItem>)}
 				</SelectContent>
 			</Select>
+			</div>
 			<div className='relative'>
 
 			<Popover>
