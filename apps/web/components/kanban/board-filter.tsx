@@ -52,17 +52,19 @@ const BoardFilter = ({ params, setParams }: {
 	}
 
 	const handlePriorityFilter = (priority: string) => {
+		
 		setPriority(priority)
 	}
 
 	const handleClearPriorityFilter = () => {
-		setPriority(undefined)
+		setPriority("")
+		
 	}
 
 	useEffect(() => {
 		setParams({
 			...params,
-			priority: priority ? +priority : undefined
+			priority: priority && !isNaN(+priority) ? +priority : undefined
 		})
 	}, [priority])
 
@@ -113,63 +115,63 @@ const BoardFilter = ({ params, setParams }: {
 			</AvatarGroup>
 			<div className='relative'>
 
-			<Select onValueChange={handlePriorityFilter} value={priority}>
+				<Select onValueChange={handlePriorityFilter} value={priority}>
 					<SelectTrigger className="w-full min-w-48" onReset={handleClearPriorityFilter}
 						value={priority}
 					>
-						<SelectValue placeholder="Select Priority" />
+						<SelectValue placeholder="Select Priority"/>
 					</SelectTrigger>
-					
 
-				<SelectContent>
-					{priorityOptions.map(priority =>
-						<SelectItem key={priority.value} value={priority.value.toString()} >
-							{priority.label}
-						</SelectItem>)}
-				</SelectContent>
-			</Select>
+
+					<SelectContent>
+						{priorityOptions.map(priority =>
+							<SelectItem key={priority.value} value={priority.value.toString()} >
+								{priority.label}
+							</SelectItem>)}
+					</SelectContent>
+				</Select>
 			</div>
 			<div className='relative'>
 
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button
-						id="date"
-						variant={"outline"}
-						className={cn(
-							"w-[280px] justify-start text-left font-normal",
-							!date && "text-muted-foreground"
-						)}
-					>
-						<CalendarIcon />
-						{date?.from ? (
-							date.to ? (
-								<>
-									{format(date.from, "LLL dd, y")} -{" "}
-									{format(date.to, "LLL dd, y")}
-								</>
+				<Popover>
+					<PopoverTrigger asChild>
+						<Button
+							id="date"
+							variant={"outline"}
+							className={cn(
+								"w-[280px] justify-start text-left font-normal",
+								!date && "text-muted-foreground"
+							)}
+						>
+							<CalendarIcon />
+							{date?.from ? (
+								date.to ? (
+									<>
+										{format(date.from, "LLL dd, y")} -{" "}
+										{format(date.to, "LLL dd, y")}
+									</>
+								) : (
+									format(date.from, "LLL dd, y")
+								)
 							) : (
-								format(date.from, "LLL dd, y")
-							)
-						) : (
-							<span>Pick a date</span>
-						)}
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-auto p-0" align="start">
-					<Calendar
-						initialFocus
-						mode="range"
-						defaultMonth={date?.from}
-						selected={date}
-						onSelect={(date) => handleSelectDate(date)}
-						numberOfMonths={2}
-					/>
-				</PopoverContent>
+								<span>Pick a date</span>
+							)}
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="w-auto p-0" align="start">
+						<Calendar
+							initialFocus
+							mode="range"
+							defaultMonth={date?.from}
+							selected={date}
+							onSelect={(date) => handleSelectDate(date)}
+							numberOfMonths={2}
+						/>
+					</PopoverContent>
 					{date && <Button variant='ghost' size='icon' className='cursor-pointer absolute right-0 hover:bg-transparent top-1/2 -translate-y-1/2' onClick={() => handleSelectDate(undefined)}>
 						<CircleX className='size-4 opacity-50 ' />
 					</Button>}
-			</Popover>
+				</Popover>
 			</div>
 
 		</div>
