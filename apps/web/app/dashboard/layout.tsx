@@ -22,7 +22,7 @@ import { usePathname } from "next/navigation"
 import React from 'react'
 import { upperFirst } from 'scule'
 import { toast } from "sonner"
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = ({ children, modal }: { children: React.ReactNode, modal: React.ReactNode }) => {
 	const {data : session} = useSession()
 	const pathname = usePathname()
 
@@ -81,7 +81,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 				</header>
 				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
 						{children}
-					
+						{modal}
 				</div>
 			</SidebarInset>
 		</SidebarProvider>

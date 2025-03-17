@@ -64,5 +64,7 @@ export async function me(req: Request, res: Response) {
 
     const user = await userModel.findById((request.token as JwtPayload).sub!)
 
-    res.json(user)
+	res.json({
+		data: user
+	})
 }

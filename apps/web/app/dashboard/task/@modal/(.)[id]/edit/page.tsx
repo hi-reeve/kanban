@@ -14,7 +14,7 @@ const page =  () => {
 			<DialogHeader>
 				<DialogTitle className="font-bold">Edit Task</DialogTitle>
 				<DialogDescription className="hidden">
-					This is form create
+					This is form edit
 				</DialogDescription>
 			</DialogHeader>
 			<ManageForm task={data?.data}/>

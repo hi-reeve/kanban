@@ -73,7 +73,7 @@ const CardMenu = ({ task }: Props) => {
 	}
 
 	const handleEditTask = () => {
-		router.push(`/dashboard/task/edit/${task.id}`)
+		router.push(`/dashboard/task/${task.id}/edit`)
 	}
 
 	const handleDeleteTask = () => {
@@ -94,6 +94,10 @@ const CardMenu = ({ task }: Props) => {
 			}
 		})
 	}
+
+	const handleViewTask = () => {
+		router.push(`/dashboard/task/${task.id}`)
+	}
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -107,6 +111,9 @@ const CardMenu = ({ task }: Props) => {
 				<DropdownMenuLabel>{task.title}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
+					<DropdownMenuItem onClick={handleViewTask}>
+						View Tasks
+					</DropdownMenuItem>
 					<DropdownMenuItem onClick={handleEditTask}>
 						Edit Tasks
 					</DropdownMenuItem>

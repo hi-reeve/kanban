@@ -8,4 +8,10 @@ export default antfu({
         quotes: 'single',
     },
 
+    rules: {
+
+        'sort-imports': {
+            type: 'alphabetical',
+        },
+    },
 })

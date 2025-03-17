@@ -1,5 +1,5 @@
 import { getToken } from "next-auth/jwt";
-import withAuth from "next-auth/middleware";
+import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 
@@ -21,6 +21,5 @@ export default async function middleware(req: NextRequest, event: NextFetchEvent
 		},
 	});
 
-	// @ts-expect-error
-	return authMiddleware(req, event);
+	return authMiddleware(req as NextRequestWithAuth, event);
 }

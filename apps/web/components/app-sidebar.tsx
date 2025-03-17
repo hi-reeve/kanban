@@ -2,8 +2,7 @@
 
 import {
 	KanbanSquare,
-	LayoutDashboard,
-	UserCog
+	LayoutDashboard
 } from "lucide-react"
 import * as React from "react"
 
@@ -34,12 +33,6 @@ const data = {
 			icon: KanbanSquare,
 			
 		},
-		{
-			title: "User",
-			url: "/dashboard/user",
-			icon: UserCog,
-		},
-	
 	],
 }
 
