@@ -17,8 +17,10 @@ import { useMutationDeleteTask } from "@/services/task/mutation/useMutationDelet
 import { useMutationUpdateTask } from "@/services/task/mutation/useMutationUpdateTask"
 import { useDialogStore } from "@/stores/dialog"
 import { ITaskListResponse } from "@/types/task"
+import { ROLE_ENUM } from "@app/utils/types"
 import { useQueryClient } from "@tanstack/react-query"
 import { Check, EllipsisVerticalIcon } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "../ui/button"
@@ -27,11 +29,12 @@ type Props = {
 	task: ITaskListResponse
 }
 const CardMenu = ({ task }: Props) => {
+	const { data: session } = useSession()
 	const router = useRouter()
 	const queryClient = useQueryClient()
 	const state = useDialogStore(state => state)
 	const { mutateAsync: mutateUpdateTaskAsync } = useMutationUpdateTask()
-	const {mutateAsync : mutateDeleteTaskAsync} = useMutationDeleteTask()
+	const { mutateAsync: mutateDeleteTaskAsync } = useMutationDeleteTask()
 	const handleUpdateOnClick = async (key: keyof ITaskListResponse, value: any) => {
 
 		let loadingText = 'Updating task'
@@ -89,7 +92,7 @@ const CardMenu = ({ task }: Props) => {
 						state.close()
 						return 'Task deleted successfully'
 					},
-					
+
 				})
 			}
 		})
@@ -117,11 +120,11 @@ const CardMenu = ({ task }: Props) => {
 					<DropdownMenuItem onClick={handleEditTask}>
 						Edit Tasks
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={handleDeleteTask}>
+					{session?.user.role === ROLE_ENUM.ADMIN && <DropdownMenuItem onClick={handleDeleteTask}>
 						<span className="text-red-500">
 							Delete Task
 						</span>
-					</DropdownMenuItem>
+					</DropdownMenuItem>}
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>

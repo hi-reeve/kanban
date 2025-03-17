@@ -113,13 +113,14 @@ export async function destroy(id: string) {
 }
 
 export async function update(id: string, task: UpdateTaskDto) {
+	
 	return await db.transaction(async (tx) => {
 		const [updatedTask] = await tx.update(tasks).set(task).where(eq(tasks.id, id)).returning()
 
-		await tx.delete(userTasks).where(eq(userTasks.task_id, id))
-
-
+		
+		
 		if (task.users) {
+			await tx.delete(userTasks).where(eq(userTasks.task_id, id))
 			await tx.insert(userTasks).values(
 				task.users.map((assignee) => {
 					return {

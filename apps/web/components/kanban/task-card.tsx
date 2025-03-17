@@ -6,11 +6,14 @@ import {
 } from "@/components/ui/tooltip"
 import { initialGenerator, priorityMapper } from "@/lib/utils"
 import { ITaskListResponse } from "@/types/task"
+import { ROLE_ENUM } from "@app/utils/types"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { computed } from "@preact/signals-react"
 import { cva } from "class-variance-authority"
 import { GripVertical } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { useCallback } from "react"
 import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
@@ -23,6 +26,7 @@ type Props = {
 
 
 const TaskCard = ({ task, isOverlay }: Props) => {
+	const { data: session } = useSession()
 	const priority = computed(() => priorityMapper(task.priority))
 	const {
 		setNodeRef,
@@ -53,6 +57,11 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 		},
 	});
 
+	const renderCardMenu = useCallback(() => {
+		const userIds = task.assignees.map(assignee => assignee.id)
+		if ((session?.user.role === ROLE_ENUM.USER && userIds.includes(session?.user.id)) || session?.user.role === ROLE_ENUM.ADMIN) return <CardMenu task={task} />
+	}, [session?.user.role, session?.user.id])
+
 	return (
 		<Card ref={setNodeRef}
 			style={style}
@@ -70,7 +79,7 @@ const TaskCard = ({ task, isOverlay }: Props) => {
 						<GripVertical />
 					</Button>
 					<span>{task.title}</span>
-				<CardMenu task={task}/>
+					{renderCardMenu()}
 				</CardTitle>
 				<CardContent className="px-0 mt-4">
 					<p className="truncate">{task.description}</p>
